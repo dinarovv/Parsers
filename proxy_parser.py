@@ -15,14 +15,14 @@ class Parser:
         self.page_count = 0
 
 
-    def get_page_count(self):
+    def get_page_count(self): # получение количества страниц
 
         headers = {'user-agent': self.user_agent.random}
         response = requests.get(url=self.url, headers=headers)
         self.page_count = int([item.text for item in BS(response.text, 'lxml') \
                               .find('div', class_='pagination').find_all('a')][-2])
 
-    def parse(self):
+    def parse(self): # парсинг
 
         self.get_page_count()
 
@@ -53,7 +53,7 @@ class Parser:
         print('Парсинг данных завершён.')
 
 
-    def create_csv(self):
+    def create_csv(self): # создание + заполнение *.csv
 
         with open('proxies.csv', 'w', encoding='utf-8-sig', newline='') as file:
 
@@ -72,7 +72,7 @@ class Parser:
         file.close()
 
 
-    def create_txt(self):
+    def create_txt(self): # создание + заполнение *.txt
 
         with open("proxies.txt", "w", encoding="utf-8") as file:
 
@@ -84,7 +84,7 @@ class Parser:
         file.close()
 
 
-    def parse_excel(self):
+    def parse_csv(self):
 
         self.parse()
         self.create_csv()
@@ -104,5 +104,8 @@ class Parser:
         
 
 if __name__ == '__main__':
+    
     parser = Parser()
-    parser.parse_txt_csv()
+    parser.parse_txt_csv() # - для всего
+    #parser.parse_txt() # - для *.txt
+    #parser.parse_csv() # - для *.csv
