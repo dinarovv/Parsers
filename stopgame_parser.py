@@ -59,11 +59,11 @@ class Parser:
 
                     if news_name in self.comments:
 
-                        self.comments[news_name].append({a : c})
+                        self.comments[news_name].append(f'{a}: {c}')
 
                     else:
 
-                        self.comments[news_name] = [{a : c}]
+                        self.comments[news_name] = [f'{a}: {c}']
 
 
     def write_json(self):
