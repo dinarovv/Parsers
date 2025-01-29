@@ -8,6 +8,7 @@ from fake_useragent import UserAgent
 class Parser:
 
     def __init__(self):
+        
         self.url = 'https://stopgame.ru/'
         self.comments = dict()
 
@@ -21,7 +22,6 @@ class Parser:
         response = requests.get(url = url, headers = headers)
         last_page = int([item.text for item in BS(response.text, 'lxml').find_all('a', class_ = 'item')][-1])
 
-        # отладка
         input_value = int(input(f'''\
 Введите:
 - Любое количество страниц (0 < x <= {last_page})
@@ -59,11 +59,11 @@ class Parser:
 
                     if news_name in self.comments:
 
-                        self.comments[news_name].append(f'{a}: {c}')
+                        self.comments[news_name][a] = c.replace('\r','')
 
                     else:
 
-                        self.comments[news_name] = [f'{a}: {c}']
+                        self.comments[news_name] = {a: c.replace('\r','')}
 
 
     def write_json(self):
@@ -82,5 +82,6 @@ class Parser:
 
 
 if __name__ == '__main__':
+    
     parser = Parser()
     parser.parse_json()
