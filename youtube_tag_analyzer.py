@@ -113,6 +113,7 @@ class Parser:
                     except Exception as _ex:
 
                         browser.execute_script(f"window.scrollBy(0,250)")
+                        
                 video_url = browser.current_url
                 self.urls.append(video_url)
                 self.titles.append(browser.find_element(By.CSS_SELECTOR, "h1.style-scope.ytd-watch-metadata").text)
@@ -149,7 +150,7 @@ class Parser:
                                 self.info.append(f'{video_info[0].strip()}г.{video_info[1].strip()}г.')
 
                             video_tags = [emoji.replace_emoji(tag, replace="") for tag in tags if '#' in tag]
-                            # библиотека emoji, во избежании таких тегов: "🥶🥶#subscribe"
+                            # удаление эмодзи методом библиотеки emoji, во избежании таких тегов: "🥶🥶#subscribe"
                             self.tags.append(list(set(video_tags)))
 
                             browser.back()
