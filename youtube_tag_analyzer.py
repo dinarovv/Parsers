@@ -41,7 +41,7 @@ class Parser:
             browser.get(self.url)
 
             try:
-
+                # принятие куки
                 browser.find_element(By.XPATH,
                 '/html/body/ytd-app/ytd-consent-bump-v2-lightbox/' +\
                 'tp-yt-paper-dialog/div[4]/div[2]/div[6]/div[1]/ytd-button-renderer[2]/yt-button-shape').click()
@@ -52,7 +52,7 @@ class Parser:
                 pass
 
             xpath = [
-    "/html/body/ytd-app/div[1]/div[2]/ytd-masthead/div[4]/div[2]/yt-searchbox/button",
+    '/html/body/ytd-app/div[1]/div[2]/ytd-masthead/div[4]/div[2]/yt-searchbox/button',
     '/html/body/ytd-app/div[1]/ytd-page-manager/ytd-search/div[1]/ytd-two-column-search-results-renderer/div' + \
     '/ytd-section-list-renderer/div[1]/div[2]/ytd-search-sub-menu-renderer/div/div/ytd-toggle-button-renderer/' + \
     'yt-button-shape/button/yt-touch-feedback-shape/div/div[2]',
@@ -65,12 +65,11 @@ class Parser:
     '/html/body/ytd-app/div[1]/ytd-page-manager/ytd-watch-flexy/div[5]/div[1]/div/div[2]/ytd-watch-metadata/' + \
     'div/div[4]/div[1]/div/ytd-text-inline-expander/tp-yt-paper-button[1]',
     '//*[@id="description-inner"]',
-    '/html/body/ytd-app/div[1]/ytd-page-manager/ytd-watch-flexy/div[5]/div[1]/div/div[2]/ytd-watch-metadata/' + \
-    'div/div[4]/div[1]/div/ytd-text-inline-expander/yt-attributed-string/span/span/a',
-    '/html/body/ytd-app/div[1]/ytd-page-manager/ytd-watch-flexy/div[5]/div[1]/div/div[2]/' + \
-    'ytd-watch-metadata/div/div[1]/h1/yt-formatted-string/span',
-    '/html/body/ytd-app/div[1]/ytd-page-manager/ytd-search/div[1]/div/ytd-search-header-renderer/div[3]/'+\
-    'ytd-button-renderer/yt-button-shape/button/yt-touch-feedback-shape/div/div[2]'
+    '/html/body/ytd-app/div[1]/ytd-page-manager/ytd-search/div[1]/div/ytd-search-header-renderer/div[3]',
+    '/html/body/ytd-app/ytd-popup-container/tp-yt-paper-dialog/ytd-search-filter-options-dialog-renderer/div[2]/' +\
+    'ytd-search-filter-group-renderer[2]/ytd-search-filter-renderer[1]/a',
+    '/html/body/ytd-app/ytd-popup-container/tp-yt-paper-dialog/ytd-search-filter-options-dialog-renderer/div[2]/' +\
+    'ytd-search-filter-group-renderer[5]/ytd-search-filter-renderer[3]/a',
             ]
 
             browser.find_element(By.TAG_NAME, 'input').click()
@@ -79,17 +78,30 @@ class Parser:
             time.sleep(1)
             browser.find_element(By.XPATH, xpath[0]).click()
             time.sleep(1)
-            browser.find_element(By.XPATH, xpath[1]).click()
-            time.sleep(1)
-            browser.find_element(By.XPATH, xpath[2]).click()
-            time.sleep(1)
-            browser.find_element(By.XPATH, xpath[1]).click()
-            time.sleep(1)
-            browser.find_element(By.XPATH, xpath[3]).click()
-            time.sleep(1)
+
+            try:
+                # для русского интерфейса
+                browser.find_element(By.XPATH, xpath[1]).click()
+                time.sleep(1)
+                browser.find_element(By.XPATH, xpath[2]).click()
+                time.sleep(1)
+                browser.find_element(By.XPATH, xpath[1]).click()
+                time.sleep(1)
+                browser.find_element(By.XPATH, xpath[3]).click()
+                time.sleep(1)
+
+            except Exception as _ex:
+                # в остальных случаях
+                browser.find_element(By.XPATH, xpath[6]).click()
+                time.sleep(1)
+                browser.find_element(By.XPATH, xpath[7]).click()
+                time.sleep(1)
+                browser.find_element(By.XPATH, xpath[6]).click()
+                time.sleep(1)
+                browser.find_element(By.XPATH, xpath[8]).click()
+                time.sleep(1)
 
             browser.execute_script(f"window.scrollBy(0,{275})")
-            time.sleep(1)
 
             if round(self.count / 19) != 0:
 
@@ -113,7 +125,7 @@ class Parser:
                     except Exception as _ex:
 
                         browser.execute_script(f"window.scrollBy(0,250)")
-                        
+
                 video_url = browser.current_url
                 self.urls.append(video_url)
                 self.titles.append(browser.find_element(By.CSS_SELECTOR, "h1.style-scope.ytd-watch-metadata").text)
@@ -124,14 +136,7 @@ class Parser:
                     if count < self.count:
 
                         video.find_element(By.XPATH, xpath[4]).click()
-
                         time.sleep(1)
-                        '''
-                        #name = browser.find_element(By.CSS_SELECTOR,'h1.style-scope:nth-child(2) > yt-formatted-string:nth-child(2) > span:nth-child(1)').text
-                        #self.name.append(name.strip())
-                        #print(name)
-                        '''
-
                         count += 1
 
                         for items in browser.find_elements(By.XPATH, xpath[5]):
@@ -158,6 +163,7 @@ class Parser:
 
                     else:
 
+                        print(f'Была собрана информация о {len(self.info)} видео.')
                         return 0
 
                 except Exception as _ex:
@@ -167,7 +173,7 @@ class Parser:
                     time.sleep(1)
                     continue
 
-            print(f'Была собрана информация о {len(self.info)} видео. (100%)')
+            print(f'Была собрана информация о {len(self.info)} видео.')
 
 
     def make_json(self):
